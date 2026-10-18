@@ -1592,11 +1592,14 @@ local function markFinished(kind, id, purchased)
 	local key = kind .. ":" .. tostring(id)
 	local row = pendingRows[key]
 	pendingRows[key] = nil
-	local sub = row and row.Parent and row:FindFirstChild("Sub")
-	if sub then
-		sub.Text ..= "  •  " .. (purchased and "Bought" or "Closed")
-		tween(sub, 0.3, {TextColor3 = purchased and col.green or col.dim})
-	end
+
+	if not row or not row.Parent then return end
+
+	local sub = row:FindFirstChild("Sub")
+	if not sub or not sub:IsA("TextLabel") then return end
+
+	sub.Text = sub.Text .. "  •  " .. (purchased and "Bought" or "Closed")
+	tween(sub, 0.3, {TextColor3 = purchased and col.green or col.dim})
 end
 
 local function firstId(...)
